@@ -111,6 +111,8 @@ spark_yarn_cluster_get_resource_manager_webapp <- function() {
   rmHighAvailability <- spark_yarn_cluster_get_conf_property("yarn.resourcemanager.ha.enabled")
   rmHighAvailability <- length(rmHighAvailability) > 0 && grepl("TRUE", rmHighAvailability, ignore.case = TRUE)
 
+  httpsEnabled <- spark_yarn_cluster_get_conf_property("yarn.http.policy")    
+  
   mainRMWebapp <- "yarn.resourcemanager.webapp.address"
   if (rmHighAvailability) {
     rmHighAvailabilityId <- spark_yarn_cluster_get_conf_property("yarn.resourcemanager.ha.id")
@@ -122,13 +124,21 @@ spark_yarn_cluster_get_resource_manager_webapp <- function() {
       rmHighAvailabilityIds <- rmHighAvailabilityIds[rmHighAvailabilityIds != rmHighAvailabilityId]
       rmHighAvailabilityIds <- c(rmHighAvailabilityId, rmHighAvailabilityIds)
     }
-
-    mainRMWebapp <- NULL
-    propCandidates <- c(
-      "yarn.resourcemanager.webapp.address.",
-      "yarn.resourcemanager.admin.address."
-    )
-
+    
+    if (httpsEnabled = "HTTPS_ONLY") {
+      mainRMWebapp <- NULL
+      propCandidates <- c(
+        "yarn.resourcemanager.webapp.https.address.",
+        "yarn.resourcemanager.admin.address."
+      )     
+    } else {
+      mainRMWebapp <- NULL
+      propCandidates <- c(
+        "yarn.resourcemanager.webapp.address.",
+        "yarn.resourcemanager.admin.address."
+      )    
+    }
+    
     for (propCandidate in propCandidates) {
       for (rmId in rmHighAvailabilityIds) {
         rmCandidate <- paste0(propCandidate, rmId)
