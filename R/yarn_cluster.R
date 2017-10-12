@@ -36,7 +36,7 @@ spark_yarn_cluster_get_app_property <- function(config, start_time, rm_webapp, p
   appLookupUseUser <- spark_config_value(config, "sparklyr.yarn.cluster.lookup.byname", !is.null(appLoookupUser))
   httpsEnabled <- spark_yarn_cluster_get_conf_property("yarn.http.policy")
   
-  if (httpsEnabled = "HTTPS_ONLY") {
+  if (httpsEnabled == "HTTPS_ONLY") {
     protocol <- "https"
   } else {
     protocol <- "http"
@@ -95,7 +95,7 @@ spark_yarn_cluster_get_app_property <- function(config, start_time, rm_webapp, p
 spark_yarn_cluster_resource_manager_is_online <- function(rm_webapp) {
   httpsEnabled <- spark_yarn_cluster_get_conf_property("yarn.http.policy")
   
-  if (httpsEnabled = "HTTPS_ONLY") {
+  if (httpsEnabled == "HTTPS_ONLY") {
     protocol <- "https"
   } else {
     protocol <- "http"
@@ -139,7 +139,7 @@ spark_yarn_cluster_get_resource_manager_webapp <- function() {
       rmHighAvailabilityIds <- c(rmHighAvailabilityId, rmHighAvailabilityIds)
     }
     
-    if (httpsEnabled = "HTTPS_ONLY") {
+    if (httpsEnabled == "HTTPS_ONLY") {
       mainRMWebapp <- NULL
       propCandidates <- c(
         "yarn.resourcemanager.webapp.https.address.",
