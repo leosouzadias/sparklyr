@@ -127,7 +127,11 @@ spark_yarn_cluster_get_resource_manager_webapp <- function() {
 
   httpsEnabled <- spark_yarn_cluster_get_conf_property("yarn.http.policy")    
   
-  mainRMWebapp <- "yarn.resourcemanager.webapp.address"
+  if (httpsEnabled == "HTTPS_ONLY") {
+    mainRMWebapp <- "yarn.resourcemanager.https.webapp.address"
+  } else {
+    mainRMWebapp <- "yarn.resourcemanager.webapp.address"
+  }
   if (rmHighAvailability) {
     rmHighAvailabilityId <- spark_yarn_cluster_get_conf_property("yarn.resourcemanager.ha.id")
 
